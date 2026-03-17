@@ -74,7 +74,7 @@ export default function Login({ status, canResetPassword }) {
                                 setData('remember', e.target.checked)
                             }
                         />
-                        <span className="ms-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm text-gray-300">
                             Remember me
                         </span>
                     </label>
@@ -83,7 +83,7 @@ export default function Login({ status, canResetPassword }) {
                 <div className="mt-4 flex items-center justify-between">
                     <Link
                         href={route('register')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900"
+                        className="rounded-md text-sm text-gray-400 underline hover:text-gray-200"
                     >
                         Create account
                     </Link>
@@ -91,7 +91,7 @@ export default function Login({ status, canResetPassword }) {
                     <div className="flex items-center gap-4">
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900"
+                            className="rounded-md text-sm text-gray-400 underline hover:text-gray-200"
                         >
                             Forgot your password?
                         </Link>

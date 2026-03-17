@@ -10,6 +10,7 @@ class ProductController extends Controller
 {
     public function index()
     {
+
         $products = Product::with('seller')
             ->where('is_active', true)
             ->latest()
