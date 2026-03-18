@@ -1,8 +1,12 @@
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+
 export default function Edit({ product }) {
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
+        _method: 'put',
         title: product.title,
+        type: product.type ?? 'product',
+        image: null,
         description: product.description ?? '',
         price: product.price ?? '',
         phone: product.phone,
@@ -12,7 +16,10 @@ export default function Edit({ product }) {
 
     const submit = (e) => {
         e.preventDefault();
-        put(route('seller.products.update', product.id));
+
+        post(route('seller.products.update', product.id), {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -31,6 +38,41 @@ export default function Edit({ product }) {
                             className="w-full rounded border p-2"
                         />
                         {errors.title && <div className="text-red-500">{errors.title}</div>}
+                    </div>
+
+                    <div>
+                        <label className="block">Category</label>
+                        <select
+                            value={data.type}
+                            onChange={(e) => setData('type', e.target.value)}
+                            className="w-full rounded border p-2"
+                        >
+                            <option value="product">Товар</option>
+                            <option value="service">Услуга</option>
+                        </select>
+                        {errors.type && <div className="text-red-500">{errors.type}</div>}
+                    </div>
+
+                    {product.image_url && (
+                        <div>
+                            <label className="mb-2 block">Current image</label>
+                            <img
+                                src={product.image_url}
+                                alt={product.title}
+                                className="h-48 w-full rounded-lg border object-cover"
+                            />
+                        </div>
+                    )}
+
+                    <div>
+                        <label className="block">New image</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setData('image', e.target.files[0])}
+                            className="w-full rounded border p-2"
+                        />
+                        {errors.image && <div className="text-red-500">{errors.image}</div>}
                     </div>
 
                     <div>
@@ -71,6 +113,7 @@ export default function Edit({ product }) {
                             onChange={(e) => setData('location', e.target.value)}
                             className="w-full rounded border p-2"
                         />
+                        {errors.location && <div className="text-red-500">{errors.location}</div>}
                     </div>
 
                     <div>

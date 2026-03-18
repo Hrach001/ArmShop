@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -54,7 +55,11 @@ class ProductController extends Controller
             'price' => ['nullable', 'numeric', 'min:0'],
             'phone' => ['required', 'string', 'max:50'],
             'location' => ['nullable', 'string', 'max:255'],
+            'type' => ['required', 'in:product,service'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $imagePath = $request->file('image')?->store('products', 'public');
 
         Product::create([
             'user_id' => auth()->id(),
@@ -64,6 +69,8 @@ class ProductController extends Controller
             'phone' => $validated['phone'],
             'location' => $validated['location'] ?? null,
             'is_active' => true,
+            'type' => $validated['type'],
+            'image' => $imagePath,
         ]);
 
         return redirect()->route('seller.products.index');
@@ -89,9 +96,29 @@ class ProductController extends Controller
             'phone' => ['required', 'string', 'max:50'],
             'location' => ['nullable', 'string', 'max:255'],
             'is_active' => ['required', 'boolean'],
+            'type' => ['required', 'in:product,service'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
-        $product->update($validated);
+        $dataToUpdate = [
+            'title' => $validated['title'],
+            'type' => $validated['type'],
+            'description' => $validated['description'] ?? null,
+            'price' => $validated['price'] ?? null,
+            'phone' => $validated['phone'],
+            'location' => $validated['location'] ?? null,
+            'is_active' => $validated['is_active'],
+        ];
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $dataToUpdate['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($dataToUpdate);
 
         return redirect()->route('seller.products.index');
     }
@@ -99,6 +126,11 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         abort_if($product->user_id !== auth()->id(), 403);
+
+
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
 
         $product->delete();
 

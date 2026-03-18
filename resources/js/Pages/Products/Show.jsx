@@ -19,6 +19,14 @@ export default function Show({ product }) {
                     <p className="mt-4 text-xl font-bold">${product.price}</p>
                 )}
 
+                {product.image_url && (
+                    <img
+                        src={product.image_url}
+                        alt={product.title}
+                        className="mb-6 h-80 w-full rounded-xl object-cover"
+                    />
+                )}
+
                 <p className="mt-4">{product.description}</p>
 
                 <div className="mt-6 rounded-lg border p-4">

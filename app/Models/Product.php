@@ -16,12 +16,22 @@ class Product extends Model
         'location',
         'image',
         'is_active',
+        'type'
+    ];
+
+    protected $appends = [
+        'image_url',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'is_active' => 'boolean',
     ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
+    }
 
     public function seller(): BelongsTo
     {

@@ -1,8 +1,11 @@
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
+        type: 'product',
+        image: null,
         description: '',
         price: '',
         phone: '',
@@ -11,12 +14,14 @@ export default function Create() {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('seller.products.store'));
+
+        post(route('seller.products.store'), {
+            forceFormData: true,
+        });
     };
 
     return (
-        <>
-            <AuthenticatedLayout>
+        <AuthenticatedLayout>
             <Head title="Create Product" />
 
             <div className="mx-auto max-w-2xl p-6">
@@ -31,6 +36,30 @@ export default function Create() {
                             className="w-full rounded border p-2"
                         />
                         {errors.title && <div className="text-red-500">{errors.title}</div>}
+                    </div>
+
+                    <div>
+                        <label className="block">Category</label>
+                        <select
+                            value={data.type}
+                            onChange={(e) => setData('type', e.target.value)}
+                            className="w-full rounded border p-2"
+                        >
+                            <option value="product">Товар</option>
+                            <option value="service">Услуга</option>
+                        </select>
+                        {errors.type && <div className="text-red-500">{errors.type}</div>}
+                    </div>
+
+                    <div>
+                        <label className="block">Image</label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => setData('image', e.target.files[0])}
+                            className="w-full rounded border p-2"
+                        />
+                        {errors.image && <div className="text-red-500">{errors.image}</div>}
                     </div>
 
                     <div>
@@ -83,7 +112,6 @@ export default function Create() {
                     </button>
                 </form>
             </div>
-            </AuthenticatedLayout>
-        </>
+        </AuthenticatedLayout>
     );
 }

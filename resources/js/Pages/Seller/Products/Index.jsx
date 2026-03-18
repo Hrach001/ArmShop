@@ -31,7 +31,13 @@ export default function Index({ products }) {
                             <p>Phone: {product.phone}</p>
                             <p>Location: {product.location ?? 'Not specified'}</p>
                             <p>Status: {product.is_active ? 'Active' : 'Inactive'}</p>
-
+                            {product.image_url && (
+                                <img
+                                    src={product.image_url}
+                                    alt={product.title}
+                                    className="mb-3 h-48 w-full rounded-lg object-cover"
+                                />
+                            )}
                             <div className="mt-3 flex gap-2">
                                 <Link
                                     href={route('seller.products.edit', product.id)}
