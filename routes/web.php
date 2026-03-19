@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'seller'])->prefix('seller')->name('seller.')->group(
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('home');
 
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/start/{seller}', [ChatController::class, 'start'])->name('chats.start');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
+    Route::post('/chats/{chat}/messages', [ChatController::class, 'storeMessage'])->name('chats.messages.store');
 
     Route::get('/dashboard', function () {
         return redirect()->route('home');

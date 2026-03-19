@@ -68,6 +68,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                         All Products
                                     </NavLink>
                                 )}
+
+                                <NavLink
+                                    href={route('chats.index')}
+                                    active={route().current('chats.index')}
+                                    className="text-gray-300 hover:text-white transition"
+                                >
+                                    Chats
+                                </NavLink>
                             </div>
                         </div>
 

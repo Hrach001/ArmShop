@@ -1,7 +1,9 @@
-import { Head } from '@inertiajs/react';
+import {Head, Link, usePage} from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function Show({ product }) {
+    const { auth } = usePage().props;
+
     return (
         <AuthenticatedLayout>
             <Head title={product.title} />
@@ -10,7 +12,33 @@ export default function Show({ product }) {
                 <div className="mx-auto max-w-3xl">
 
                     {/* Title */}
-                    <h1 className="text-3xl font-bold text-white mb-2">{product.title}</h1>
+                    <div className="flex justify-between">
+                        <h1 className="text-3xl font-bold text-white mb-2">{product.title}</h1>
+                        <div>
+                            {auth?.user && auth.user.id !== product.seller.id && (
+                                <Link
+                                    href={route('chats.start', product.seller.id)}
+                                    className="inline-flex items-center justify-center rounded-full border p-2 bg-gray-100 hover:bg-gray-500"
+                                    title="Open chat"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M8 10h8M8 14h5m-9 6 2.5-2.5A9 9 0 1 1 21 12a9 9 0 0 1-9 9 8.96 8.96 0 0 1-3.5-.7L4 20Z"
+                                        />
+                                    </svg>
+                                </Link>
+                            )}
+                        </div>
+                    </div>
 
                     {/* Seller & Location */}
                     <p className="mt-2 text-gray-400">Seller: {product.seller.name}</p>
