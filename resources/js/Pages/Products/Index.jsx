@@ -51,7 +51,7 @@ export default function Index({ products }) {
                         </p>
 
                         <p className="mt-1 text-sm text-gray-400">
-                            Type: {product.type === 'product' ? 'Товар' : 'Услуга'}
+                            Type: {product.type === 'product' ? 'Product' : 'Service'}
                         </p>
 
                         {product.description && (

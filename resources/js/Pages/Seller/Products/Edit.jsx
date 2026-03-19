@@ -26,7 +26,8 @@ export default function Edit({ product }) {
             delete formData.image;
         }
 
-        put(route('seller.products.update', product.id), formData, {
+        post(route('seller.products.update', product.id), {
+            ...formData,
             forceFormData: true,
         });
     };
@@ -63,8 +64,8 @@ export default function Edit({ product }) {
                                 onChange={(e) => setData('type', e.target.value)}
                                 className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
                             >
-                                <option value="product">Товар</option>
-                                <option value="service">Услуга</option>
+                                <option value="product">Product</option>
+                                <option value="service">Service</option>
                             </select>
                         </div>
 

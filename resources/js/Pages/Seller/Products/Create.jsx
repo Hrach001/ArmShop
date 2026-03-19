@@ -50,8 +50,8 @@ export default function Create() {
                                 onChange={(e) => setData('type', e.target.value)}
                                 className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white focus:outline-none"
                             >
-                                <option value="product">Товар</option>
-                                <option value="service">Услуга</option>
+                                <option value="product">Product</option>
+                                <option value="service">Service</option>
                             </select>
                             {errors.type && <div className="text-red-400 text-sm">{errors.type}</div>}
                         </div>

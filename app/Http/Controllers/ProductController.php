@@ -56,7 +56,7 @@ class ProductController extends Controller
             'phone' => ['required', 'string', 'max:50'],
             'location' => ['nullable', 'string', 'max:255'],
             'type' => ['required', 'in:product,service'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
         ]);
 
         $imagePath = $request->file('image')?->store('products', 'public');
@@ -92,7 +92,7 @@ class ProductController extends Controller
             'phone' => ['required', 'string', 'max:50'],
             'location' => ['nullable', 'string', 'max:255'],
             'type' => ['required', 'in:product,service'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
         ]);
 
         $dataToUpdate = [
@@ -140,7 +140,7 @@ class ProductController extends Controller
     {
         $products = Product::latest()->get();
 
-        return Inertia::render('Seller/Products/Index', [
+        return Inertia::render('Admin/Products/Index', [
             'products' => $products,
         ]);
     }}

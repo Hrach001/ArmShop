@@ -35,6 +35,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                 <NavLink
                                     href="/contact"
+                                    active={route().current('contact')}
                                     className="text-gray-300 hover:text-white transition"
                                 >
                                     Contact
@@ -42,6 +43,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                 <NavLink
                                     href="/about"
+                                    active={route().current('about')}
                                     className="text-gray-300 hover:text-white transition"
                                 >
                                     About
@@ -58,7 +60,11 @@ export default function AuthenticatedLayout({ header, children }) {
                                 )}
 
                                 {user.is_admin && (
-                                    <NavLink href={route('admin.products.index')}>
+                                    <NavLink
+                                        href={route('admin.products.index')}
+                                        active={route().current('admin.products.*')}
+                                        className="text-gray-300 hover:text-white transition"
+                                    >
                                         All Products
                                     </NavLink>
                                 )}
