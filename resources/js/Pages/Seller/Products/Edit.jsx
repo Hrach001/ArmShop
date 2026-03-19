@@ -1,23 +1,32 @@
 import { Head, useForm } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { useState } from 'react';
 
 export default function Edit({ product }) {
-    const { data, setData, post, processing, errors } = useForm({
-        _method: 'put',
-        title: product.title,
-        type: product.type ?? 'product',
+    const { data, setData, post,  put,  processing, errors } = useForm({
+        title: product.title || '',
+        type: product.type || 'product',
         image: null,
-        description: product.description ?? '',
-        price: product.price ?? '',
-        phone: product.phone,
-        location: product.location ?? '',
-        is_active: product.is_active,
+        description: product.description || '',
+        price: product.price || '',
+        phone: product.phone || '',
+        location: product.location || '',
     });
+
+    const [preview, setPreview] = useState(null);
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('seller.products.update', product.id), {
+        const formData = {
+            ...data,
+        };
+
+        if (!data.image) {
+            delete formData.image;
+        }
+
+        put(route('seller.products.update', product.id), formData, {
             forceFormData: true,
         });
     };
@@ -26,116 +35,127 @@ export default function Edit({ product }) {
         <AuthenticatedLayout>
             <Head title="Edit Product" />
 
-            <div className="mx-auto max-w-2xl p-6">
-                <h1 className="mb-6 text-2xl font-bold">Edit Product</h1>
+            <div className="min-h-screen bg-gray-900 text-white p-6">
+                <div className="mx-auto max-w-2xl bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-xl">
 
-                <form onSubmit={submit} className="space-y-4">
-                    <div>
-                        <label className="block">Title</label>
-                        <input
-                            value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
-                            className="w-full rounded border p-2"
-                        />
-                        {errors.title && <div className="text-red-500">{errors.title}</div>}
-                    </div>
+                    <h1 className="mb-6 text-3xl font-bold text-center">
+                        Edit Product
+                    </h1>
 
-                    <div>
-                        <label className="block">Category</label>
-                        <select
-                            value={data.type}
-                            onChange={(e) => setData('type', e.target.value)}
-                            className="w-full rounded border p-2"
-                        >
-                            <option value="product">Товар</option>
-                            <option value="service">Услуга</option>
-                        </select>
-                        {errors.type && <div className="text-red-500">{errors.type}</div>}
-                    </div>
+                    <form onSubmit={submit} className="space-y-4">
 
-                    {product.image_url && (
+                        {/* Title */}
                         <div>
-                            <label className="mb-2 block">Current image</label>
+                            <label className="block text-gray-300 mb-1">Title</label>
+                            <input
+                                value={data.title}
+                                onChange={(e) => setData('title', e.target.value)}
+                                className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
+                            />
+                            {errors.title && <div className="text-red-400 text-sm">{errors.title}</div>}
+                        </div>
+
+                        {/* Category */}
+                        <div>
+                            <label className="block text-gray-300 mb-1">Category</label>
+                            <select
+                                value={data.type}
+                                onChange={(e) => setData('type', e.target.value)}
+                                className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
+                            >
+                                <option value="product">Товар</option>
+                                <option value="service">Услуга</option>
+                            </select>
+                        </div>
+
+                        {/* Current Image */}
+                        {product.image_url && !preview && (
                             <img
                                 src={product.image_url}
-                                alt={product.title}
-                                className="h-48 w-full rounded-lg border object-cover"
+                                alt="Current"
+                                className="h-40 w-full object-cover rounded-lg"
+                            />
+                        )}
+
+                        {/* New Image */}
+                        <div>
+                            <label className="block text-gray-300 mb-1">Change Image</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    setData('image', file);
+
+                                    if (file) {
+                                        setPreview(URL.createObjectURL(file));
+                                    }
+                                }}
+                                className="w-full text-gray-300"
                             />
                         </div>
-                    )}
 
-                    <div>
-                        <label className="block">New image</label>
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setData('image', e.target.files[0])}
-                            className="w-full rounded border p-2"
-                        />
-                        {errors.image && <div className="text-red-500">{errors.image}</div>}
-                    </div>
+                        {/* Preview */}
+                        {preview && (
+                            <img
+                                src={preview}
+                                alt="Preview"
+                                className="h-40 w-full object-cover rounded-lg"
+                            />
+                        )}
 
-                    <div>
-                        <label className="block">Description</label>
-                        <textarea
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            className="w-full rounded border p-2"
-                        />
-                    </div>
+                        {/* Description */}
+                        <div>
+                            <label className="block text-gray-300 mb-1">Description</label>
+                            <textarea
+                                value={data.description}
+                                onChange={(e) => setData('description', e.target.value)}
+                                className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block">Price</label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={data.price}
-                            onChange={(e) => setData('price', e.target.value)}
-                            className="w-full rounded border p-2"
-                        />
-                        {errors.price && <div className="text-red-500">{errors.price}</div>}
-                    </div>
+                        {/* Price */}
+                        <div>
+                            <label className="block text-gray-300 mb-1">Price</label>
+                            <input
+                                type="number"
+                                value={data.price}
+                                onChange={(e) => setData('price', e.target.value)}
+                                className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block">Phone</label>
-                        <input
-                            value={data.phone}
-                            onChange={(e) => setData('phone', e.target.value)}
-                            className="w-full rounded border p-2"
-                        />
-                        {errors.phone && <div className="text-red-500">{errors.phone}</div>}
-                    </div>
+                        {/* Phone */}
+                        <div>
+                            <label className="block text-gray-300 mb-1">Phone</label>
+                            <input
+                                value={data.phone}
+                                onChange={(e) => setData('phone', e.target.value)}
+                                className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block">Location</label>
-                        <input
-                            value={data.location}
-                            onChange={(e) => setData('location', e.target.value)}
-                            className="w-full rounded border p-2"
-                        />
-                        {errors.location && <div className="text-red-500">{errors.location}</div>}
-                    </div>
+                        {/* Location */}
+                        <div>
+                            <label className="block text-gray-300 mb-1">Location</label>
+                            <input
+                                value={data.location}
+                                onChange={(e) => setData('location', e.target.value)}
+                                className="w-full rounded-lg bg-gray-700 border border-gray-600 px-4 py-2 text-white"
+                            />
+                        </div>
 
-                    <div>
-                        <label className="block">Active</label>
-                        <select
-                            value={data.is_active ? '1' : '0'}
-                            onChange={(e) => setData('is_active', e.target.value === '1')}
-                            className="w-full rounded border p-2"
+                        {/* Button */}
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="w-full rounded-lg bg-gray-700 py-2 text-white font-semibold hover:bg-gray-600 hover:scale-[1.02] transition"
                         >
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
+                            Update Product
+                        </button>
 
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="rounded bg-black px-4 py-2 text-white"
-                    >
-                        Update
-                    </button>
-                </form>
+                    </form>
+                </div>
             </div>
         </AuthenticatedLayout>
     );

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_admin',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'is_admin' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -62,5 +64,10 @@ class User extends Authenticatable
     public function isBuyer(): bool
     {
         return $this->role === 'buyer';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
     }
 }

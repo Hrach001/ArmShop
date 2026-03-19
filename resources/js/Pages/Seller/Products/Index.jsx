@@ -30,7 +30,6 @@ export default function Index({ products }) {
                             <p>Price: {product.price ? `$${product.price}` : 'Not specified'}</p>
                             <p>Phone: {product.phone}</p>
                             <p>Location: {product.location ?? 'Not specified'}</p>
-                            <p>Status: {product.is_active ? 'Active' : 'Inactive'}</p>
                             {product.image_url && (
                                 <img
                                     src={product.image_url}

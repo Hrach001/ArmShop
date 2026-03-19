@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'seller' => \App\Http\Middleware\EnsureUserIsSeller::class,
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
         ]);
 
         $middleware->redirectGuestsTo(fn () => route('login'));

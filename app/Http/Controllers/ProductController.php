@@ -78,8 +78,6 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        abort_if($product->user_id !== auth()->id(), 403);
-
         return Inertia::render('Seller/Products/Edit', [
             'product' => $product,
         ]);
@@ -87,15 +85,12 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        abort_if($product->user_id !== auth()->id(), 403);
-
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['nullable', 'numeric', 'min:0'],
             'phone' => ['required', 'string', 'max:50'],
             'location' => ['nullable', 'string', 'max:255'],
-            'is_active' => ['required', 'boolean'],
             'type' => ['required', 'in:product,service'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
@@ -107,7 +102,7 @@ class ProductController extends Controller
             'price' => $validated['price'] ?? null,
             'phone' => $validated['phone'],
             'location' => $validated['location'] ?? null,
-            'is_active' => $validated['is_active'],
+            'is_active' => 1,
         ];
 
         if ($request->hasFile('image')) {
@@ -119,6 +114,10 @@ class ProductController extends Controller
         }
 
         $product->update($dataToUpdate);
+
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.products.index');
+        }
 
         return redirect()->route('seller.products.index');
     }
@@ -136,4 +135,12 @@ class ProductController extends Controller
 
         return redirect()->route('seller.products.index');
     }
-}
+
+    public function adminIndex()
+    {
+        $products = Product::latest()->get();
+
+        return Inertia::render('Seller/Products/Index', [
+            'products' => $products,
+        ]);
+    }}
