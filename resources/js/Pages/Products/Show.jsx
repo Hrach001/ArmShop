@@ -6,39 +6,47 @@ export default function Show({ product }) {
         <AuthenticatedLayout>
             <Head title={product.title} />
 
-            <div className="mx-auto max-w-3xl p-6">
-                <h1 className="text-2xl font-bold">{product.title}</h1>
+            <div className="min-h-screen bg-gray-900 p-6">
+                <div className="mx-auto max-w-3xl">
 
-                <p className="mt-2 text-gray-600">Seller: {product.seller.name}</p>
+                    {/* Title */}
+                    <h1 className="text-3xl font-bold text-white mb-2">{product.title}</h1>
 
-                {product.location && (
-                    <p className="mt-2 text-gray-600">Location: {product.location}</p>
-                )}
+                    {/* Seller & Location */}
+                    <p className="mt-2 text-gray-400">Seller: {product.seller.name}</p>
+                    {product.location && (
+                        <p className="mt-1 text-gray-400">Location: {product.location}</p>
+                    )}
 
-                {product.price && (
-                    <p className="mt-4 text-xl font-bold">${product.price}</p>
-                )}
+                    {/* Price */}
+                    {product.price && (
+                        <p className="mt-4 text-2xl font-bold text-white">${product.price}</p>
+                    )}
 
-                {product.image_url && (
-                    <img
-                        src={product.image_url}
-                        alt={product.title}
-                        className="mb-6 h-80 w-full rounded-xl object-cover"
-                    />
-                )}
+                    {/* Image */}
+                    {product.image_url && (
+                        <img
+                            src={product.image_url}
+                            alt={product.title}
+                            className="my-6 h-80 w-full rounded-xl object-cover border border-gray-700 shadow-md"
+                        />
+                    )}
 
-                <p className="mt-4">{product.description}</p>
+                    {/* Description */}
+                    <p className="mt-4 text-gray-200">{product.description}</p>
 
-                <div className="mt-6 rounded-lg border p-4">
-                    <p className="text-sm text-gray-500">Seller phone</p>
-                    <a
-                        href={`tel:${product.phone}`}
-                        className="mt-2 inline-block text-lg font-semibold text-blue-600 underline"
-                    >
-                        {product.phone}
-                    </a>
+                    {/* Contact Card */}
+                    <div className="mt-6 rounded-xl bg-gray-800 border border-gray-700 p-4 shadow-md">
+                        <p className="text-sm text-gray-400">Seller phone</p>
+                        <a
+                            href={`tel:${product.phone}`}
+                            className="mt-2 inline-block text-lg font-semibold text-blue-600 hover:text-blue-500 underline transition"
+                        >
+                            {product.phone}
+                        </a>
+                    </div>
                 </div>
             </div>
-            </AuthenticatedLayout>
+        </AuthenticatedLayout>
     );
 }
